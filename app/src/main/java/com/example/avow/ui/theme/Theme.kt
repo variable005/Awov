@@ -16,7 +16,7 @@ private val DarkColorScheme = darkColorScheme(
     primary = CyanPrimary,
     onPrimary = Color.Black,
     secondary = CyanSecondary,
-    onSecondary = Color.Black,
+    onSecondary = Color.White,
     tertiary = NeonGreen,
     onTertiary = Color.Black,
     error = NeonRed,
@@ -31,21 +31,14 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = CyanSecondary,
+    primary = CyanPrimary,
     onPrimary = Color.White,
-    secondary = CyanPrimary,
+    secondary = CyanSecondary,
     onSecondary = Color.White,
     tertiary = NeonGreen,
-    onTertiary = Color.Black,
-    error = NeonRed,
-    onError = Color.White,
     background = Color.White,
-    onBackground = Color.Black,
-    surface = Color(0xFFF5F5F5),
-    onSurface = Color.Black,
-    surfaceVariant = Color(0xFFE0E0E0),
-    onSurfaceVariant = Color.DarkGray,
-    outline = CyanSecondary.copy(alpha = 0.5f)
+    surface = Color(0xFFF8F9FA),
+    onPrimaryContainer = CyanSecondary
 )
 
 @Composable

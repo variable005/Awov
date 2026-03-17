@@ -11,6 +11,10 @@ composeBom = "2024.09.00"
 mediapipe = "0.10.14"
 camerax = "1.4.0"
 gson = "2.11.0"
+smartReply = "17.0.1"
+faceDetection = "16.1.7"
+translate = "17.0.3"
+coroutinesPlayServices = "1.8.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,6 +37,10 @@ androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", 
 androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+mlkit-smart-reply = { group = "com.google.mlkit", name = "smart-reply", version.ref = "smartReply" }
+mlkit-face-detection = { group = "com.google.mlkit", name = "face-detection", version.ref = "faceDetection" }
+mlkit-translate = { group = "com.google.mlkit", name = "translate", version.ref = "translate" }
+kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutinesPlayServices" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
