@@ -160,7 +160,16 @@ class MainActivity : ComponentActivity(), GestureAnalyzer.GestureListener {
             this,
             onResult = { spokenText ->
                 if (isContextModeState.value) {
-                    liveTranscriptionState.value = "" // Clear live on final
+                    // Persist final result for visibility
+                    liveTranscriptionState.value = spokenText
+                    // Clear after 4 seconds
+                    lifecycleScope.launch {
+                        kotlinx.coroutines.delay(4000)
+                        if (liveTranscriptionState.value == spokenText) {
+                            liveTranscriptionState.value = ""
+                        }
+                    }
+
                     if (isHindiModeState.value) {
                         lifecycleScope.launch {
                             val englishText = translationManager.translateHiToEn(spokenText)
@@ -413,14 +422,22 @@ fun GestureTranslatorApp() {
                             sentence = sentenceBufferState.joinToString(" "),
                             isHandInFrame = isHandInFrameState.value,
                             holdProgress = gestureHoldProgressState.floatValue,
-                            suggestions = suggestionsState,
+                            suggestions = suggestionsState.toList(),
                             onSuggestionClick = { suggestion ->
-                                if (!sentenceBufferState.contains(suggestion)) {
+                                if (isHindiModeState.value) {
                                     sentenceBufferState.add(suggestion)
-                                    spokenSentenceState.value = suggestion
+                                    scope.launch {
+                                        val eng = translationManager.translateHiToEn(suggestion)
+                                        englishSentenceBufferState.add(eng)
+                                        smartReplyManager.addMessage(eng, true)
+                                        updateMergedSuggestions()
+                                    }
+                                } else {
+                                    sentenceBufferState.add(suggestion)
+                                    englishSentenceBufferState.add(suggestion)
+                                    smartReplyManager.addMessage(suggestion, true)
+                                    updateMergedSuggestions()
                                 }
-                                speak(suggestion)
-                                smartReplyManager.addMessage(suggestion, true)
                             }
                         )
                         AppMode.LEARN -> LearnModeUI()
@@ -1276,19 +1293,20 @@ fun GestureTranslatorApp() {
                     visible = liveTranscription.isNotEmpty(),
                     enter = fadeIn() + expandVertically(),
                     exit = fadeOut() + shrinkVertically(),
-                    modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally)
+                    modifier = Modifier.padding(top = 24.dp).align(Alignment.CenterHorizontally)
                 ) {
                     Surface(
-                        shape = CircleShape,
-                        color = Color.Black.copy(alpha = 0.8f),
-                        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.2f))
+                        shape = RoundedCornerShape(20.dp),
+                        color = Color.Black.copy(alpha = 0.85f),
+                        border = BorderStroke(2.dp, CyanPrimary.copy(alpha = 0.6f)),
+                        shadowElevation = 8.dp
                     ) {
                         Text(
                             liveTranscription,
-                            modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 0.5.sp
+                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.ExtraBold,
+                                letterSpacing = 1.sp
                             ),
                             color = Color.White,
                             textAlign = TextAlign.Center
